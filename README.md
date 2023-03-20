@@ -11,4 +11,5 @@ So, all Angular CLI commands are applicable.
 - Loan details
 - Search
 - Routing
+- Experimental RxJs state storage
 - Reactive form validation
