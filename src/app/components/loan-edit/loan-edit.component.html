@@ -1,0 +1,118 @@
+<mat-card>
+  <h3>View of edit loan</h3>
+  <form [formGroup]="loanForm" (ngSubmit)="handleFormSubmit()" novalidate>
+    <!-- Id -->
+    <mat-form-field class="w100">
+      <mat-label>Id</mat-label>
+      <input matInput placeholder="Id" formControlName="id" readonly />
+    </mat-form-field>
+    <!-- Name -->
+    <mat-form-field class="w100" formGroupName="customer">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Name" formControlName="name" />
+      <mat-error> </mat-error>
+    </mat-form-field>
+    <!-- Address -->
+    <mat-form-field class="w100" formGroupName="customer">
+      <mat-label>Address</mat-label>
+      <input matInput placeholder="Address" formControlName="address" />
+    </mat-form-field>
+    <!-- Annual Net Income -->
+    <mat-form-field class="w100" formGroupName="customer">
+      <mat-label>Annual Net Income</mat-label>
+      <input
+        matInput
+        placeholder="Annual Net Income"
+        formControlName="annualNetIncome"
+        readonly
+      />
+    </mat-form-field>
+
+    <!-- Loan Term -->
+    <mat-form-field class="w100">
+      <mat-label>Loan Term, Months</mat-label>
+      <input
+        matInput
+        placeholder="Loan Term"
+        formControlName="termMonths"
+        type="number"
+        step="1"
+        [min]="store.minLoanTerm"
+        [max]="store.maxLoanTerm"
+      />
+    </mat-form-field>
+
+    <!-- Loan APR -->
+    <mat-form-field class="w100">
+      <mat-label>Loan APR, percent</mat-label>
+      <input
+        matInput
+        placeholder="Loan APR"
+        formControlName="annualPercentageRate"
+        type="number"
+        step=".01"
+        [min]="store.minApr"
+        [max]="store.maxApr"
+      />
+    </mat-form-field>
+
+    <div class="errors" *ngIf="!loanForm.valid">
+      <mat-error>
+        <div *ngIf="loanForm.errors?.['aprDoesNotMatchTerm']">
+          This combination of APR and term is impossible. If Term is more than 2
+          years then min value is 1.50%, otherwise - 1.34%.
+        </div>
+        <div
+          *ngIf="loanForm.get('customer')?.get('name')?.hasError('required')"
+        >
+          Name is required
+        </div>
+        <div
+          *ngIf="loanForm.get('customer')?.get('name')?.hasError('minlength')"
+        >
+          The minimum name length is
+          {{loanForm.get('customer')?.get('name')?.errors?.['minlength']?.requiredLength}}
+          characters.
+        </div>
+        <div
+          *ngIf="
+            loanForm.get('customer')?.get('address')?.hasError('maxlength')
+          "
+        >
+          The maximum address length is
+          {{loanForm.get('customer')?.get('address')?.errors?.['maxlength']?.requiredLength}}
+          characters.
+        </div>
+        <div *ngIf="loanForm.get('termMonths')?.hasError('max')">
+          The maximum loan term is
+          {{loanForm.get('termMonths')?.errors?.['max']?.max}}
+          months.
+        </div>
+        <div *ngIf="loanForm.get('termMonths')?.hasError('min')">
+          The minimum loan term is
+          {{loanForm.get('termMonths')?.errors?.['min']?.min}}
+          months.
+        </div>
+        <div *ngIf="loanForm.get('annualPercentageRate')?.hasError('max')">
+          The maximum loan APR is
+          {{loanForm.get('annualPercentageRate')?.errors?.['max']?.max}}
+          percent.
+        </div>
+      </mat-error>
+    </div>
+
+    <div class="buttons">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!loanForm.valid"
+      >
+        Save
+      </button>
+      <button mat-raised-button (click)="handleFormCancel()" type="button">
+        Cancel
+      </button>
+    </div>
+  </form>
+</mat-card>

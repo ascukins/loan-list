@@ -1,0 +1,49 @@
+<div>
+  <mat-form-field class="w100" appearance="outline">
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      [value]="store.filter$ | async"
+      matInput
+      (keyup)="applyFilter($event.target)"
+      placeholder="Filter by Id, Customer name, Customer address"
+    />
+  </mat-form-field>
+
+  <div style="position: relative">
+    <div
+      *ngIf="
+        (store.filter$ | async) &&
+        !(store.filteredPersonalLoans$ | async)?.length
+      "
+      class="warning-over-table mat-elevation-z2"
+    >
+      <h2>No matching records found</h2>
+    </div>
+  </div>
+
+  <mat-table [dataSource]="store.filteredPersonalLoans$">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef>Id </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{ row.customer.name }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+      <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{ row.customer.address }} </mat-cell>
+    </ng-container>
+
+    <mat-header-row
+      *matHeaderRowDef="['id', 'name', 'address']"
+    ></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: ['id', 'name', 'address']"
+      (click)="onRowClick(row)"
+      class="clickable"
+    ></mat-row>
+  </mat-table>
+</div>
